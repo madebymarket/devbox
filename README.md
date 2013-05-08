@@ -1,7 +1,7 @@
-Laptop
+devbox (WIP)
 ======
 
-Laptop is a script to set up a Mac OS X or Linux laptop for Rails development.
+devbox is a script to set up a Mac OS X or Linux laptop for Rails development.
 
 Requirements
 ------------
