@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
 successfully() {
   $* || (echo "\nfailed" 1>&2 && exit 1)
@@ -8,28 +8,20 @@ fancy_echo() {
   echo "\n$1"
 }
 
-if -f /etc/zshenv; then
-  fancy_echo "Fixing OSX zsh environment bug ..."
-    successfully sudo mv /etc/{zshenv,zshrc}
-fi
-
 fancy_echo "Installing Homebrew, a good OS X package manager ..."
   successfully ruby <(curl -fsS https://raw.github.com/mxcl/homebrew/go)
   successfully brew update
 
-if ! grep -qs "recommended by brew doctor" ~/.zshrc; then
+if ! grep -qs "recommended by brew doctor" ~/.bashrc; then
   fancy_echo "Put Homebrew location earlier in PATH ..."
-    successfully echo "\n# recommended by brew doctor" >> ~/.zshrc
-    successfully echo "export PATH='/usr/local/bin:$PATH'\n" >> ~/.zshrc
-    successfully source ~/.zshrc
+    successfully echo "\n# recommended by brew doctor" >> ~/.bashrc
+    successfully echo "export PATH='/usr/local/bin:$PATH'\n" >> ~/.bashrc
+    successfully source ~/.bashrc
 fi
 
 fancy_echo "Installing Postgres, a good open source relational database ..."
   successfully brew install postgres --no-python
   successfully initdb /usr/local/var/postgres -E utf8
-
-fancy_echo "Installing Redis, a good key-value database ..."
-  successfully brew install redis
 
 fancy_echo "Installing The Silver Searcher (better than ack or grep) to search the contents of files ..."
   successfully brew install the_silver_searcher
@@ -46,40 +38,12 @@ fancy_echo "Installing reattach-to-user-namespace, for copy-paste and RubyMotion
 fancy_echo "Installing ImageMagick, to crop and resize images ..."
   successfully brew install imagemagick
 
-fancy_echo "Installing QT, used by Capybara Webkit for headless Javascript integration testing ..."
-  successfully brew install qt
-
-fancy_echo "Installing watch, to execute a program periodically and show the output ..."
-  successfully brew install watch
-
-fancy_echo "Installing rbenv, to change Ruby versions ..."
-  successfully brew install rbenv
-
-  if ! grep -qs "rbenv init" ~/.zshrc; then
-    successfully echo 'eval "$(rbenv init -)"' >> ~/.zshrc
-
-    fancy_echo "Enable shims and autocompletion ..."
-      successfully eval "$(rbenv init -)"
-  fi
-
-  source ~/.zshrc
-
-fancy_echo "Installing rbenv-gem-rehash so the shell automatically picks up binaries after installing gems with binaries..."
-  successfully brew install rbenv-gem-rehash
-
-fancy_echo "Installing ruby-build, to install Rubies ..."
-  successfully brew install ruby-build
-
 fancy_echo "Installing GNU Compiler Collection, a necessary prerequisite to installing Ruby ..."
   successfully brew tap homebrew/dupes
   successfully brew install apple-gcc42
 
-fancy_echo "Installing Ruby 1.9.3-p392 ..."
-  CC=gcc-4.2 successfully rbenv install 1.9.3-p392
-
-fancy_echo "Setting Ruby 1.9.3-p392 as global default Ruby ..."
-  successfully rbenv global 1.9.3-p392
-  successfully rbenv shell 1.9.3-p392
+fancy_echo "Installing rvm with ruby-2.0.0"
+  succesfully curl -L https://get.rvm.io | bash -s stable --ruby=2.0.0
 
 fancy_echo "Updating to latest Rubygems version ..."
   successfully gem update --system
@@ -87,16 +51,7 @@ fancy_echo "Updating to latest Rubygems version ..."
 fancy_echo "Installing critical Ruby gems for Rails development ..."
   successfully gem install bundler foreman pg rails thin --no-document
 
-fancy_echo "Installing GitHub CLI client ..."
-  successfully gem install hub --no-document
-
-fancy_echo "Installing Heroku CLI client ..."
-  successfully brew install heroku-toolbelt
-
-fancy_echo "Installing the heroku-config plugin to pull config variables locally to be used as ENV variables ..."
-  successfully heroku plugins:install git://github.com/ddollar/heroku-config.git
-
-if ! grep -qs "DO NOT EDIT BELOW THIS LINE" ~/.zshrc; then
-  fancy_echo "Prepare ~/.zshrc for http://github.com/thoughtbot/dotfiles ..."
-    successfully echo "# DO NOT EDIT BELOW THIS LINE\n" >> ~/.zshrc
+if ! grep -qs "DO NOT EDIT BELOW THIS LINE" ~/.bashrc; then
+  fancy_echo "Prepare ~/.bashrc for http://github.com/thoughtbot/dotfiles ..."
+    successfully echo "# DO NOT EDIT BELOW THIS LINE\n" >> ~/.bashrc
 fi
